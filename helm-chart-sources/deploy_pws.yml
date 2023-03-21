@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}--dss-pws
+  namespace: theatre-east
+  labels: 
+    name: passwordsafe-integration
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      name: passwordsafe-integration
+  template:
+    metadata:
+      labels:
+        name:  passwordsafe-integration
+    spec:
+      volumes:
+      - name: secretss
+        configMap:
+          name: full-coral-configmap
+          defaultMode: 0777
+      - name: secrets
+        emptyDir: {}
+      initContainers:
+        - name: secrets-agent
+          image: beyondtrust/secrets-agent:latest
+          volumeMounts:
+            - name: secrets
+              mountPath: /usr/src/app/k8s
+          ports:
+            - containerPort: 8080
+          env:
+          - name: SECRETS_PATH
+            value: "/usr/src/app/k8s"
+          - name: BT_API_URL
+            value: "https://192.168.22.18:443/BeyondTrust/api/public/v3"
+          - name: BT_API_KEY
+            value: "e2208fa3f328f115e8d436e935ceb1e6736343429594aabe335dc8a813b3f3e5904978ee6587fee71c2fb14176128258827b6188d712b84f9bf32016c38aa085;runas=k8s;"
+          - name: SECRETS_LIST
+            value: "k8s/k8s.txt"
+          - name: MANAGED_ACCOUNTS_LIST
+            value: "masterk8s/paul"
+          - name: BT_VERIFY_CA
+            value: "False"
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command:
+          - /root/test.sh
+          - sleep 86400
+          volumeMounts:
+            - name: secrets
+              mountPath: /usr/src/app/k8s
+            - name: secretss
+              mountPath: "/root/test.sh"
+              subPath: test.sh
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-service
+spec:
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  type: {{ .Values.service.type }}
+  ports:
+    - protocol: {{ .Values.service.protocol | default "TCP" }}
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
