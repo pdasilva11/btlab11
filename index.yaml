@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  helm-chart-sources:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-03-20T21:22:58.945890974-04:00"
+    description: A Helm chart for Kubernetes
+    digest: 6f577b9bc0f9926b4b2da9d6a167438a81c8e74884405d7bc11942243641c621
+    name: helm-chart-sources
+    type: application
+    urls:
+    - https://github.com/pdasilva11/btlab.git/helm-chart-sources-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-03-20T21:22:58.944909246-04:00"
