@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-index-html-configmap
+  namespace: theatre-east
+data:
+  test.sh: |
+    #!/bin/sh
+    apt-get -y update
+    apt-get -y upgrade
+    apt-get -y install vim
+    apt-get -y install git
+    useradd -m paul
+    usermod -a -G root paul
+    cat <<EOF >> /usr/share/nginx/html/index.new
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+    <!--================== Design Provide By PaulD==================-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/serverjs/views/icon.png">
+    <style>
+        body {
+            background: moccasin;
+            margin-top: 200px;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+        }
+        
+        #typing {
+            width: 0ch;
+            color: white;
+            float: left;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 4.392386530014641vw;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 5s steps(22) 1s infinite alternate;
+        }
+        
+        #typing span {
+            color: orange;
+        }
+        
+        #crow {
+            float: left;
+            color: white;
+            font-family: consolas;
+            font-weight: bold;
+            font-size: 4.392386530014641vw;
+            animation: crow 0.5s linear 0s infinite;
+        }
+        
+        @keyframes typing {
+            from {
+                width: 0ch;
+            }
+            to {
+                width: 22.5ch;
+            }
+        }
+        
+        @keyframes crow {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .OP {
+            color: blue !important;
+            font-size: 6.222547584187408vw;
+        }
+    </style>
+    <script>
+    function readfile(){
+    alert(document.getElementById('iframe').contentDocument.body.firstChild.innerHTML);
+    }
+    </script>
+    </head>
+
+    <body>
+    <div id="typing"> <span class="PO">BEYONDTRUST SECRETS</span>
+    </div> 
+    <div id="crow">|</div>
+    <script>
+    </script>
+    </body>
+    <body>
+    <iframe od='iframe' src = '/k8s/k8s.txt' style="border:2px solid red;" height="100" width="200" onload'readfile()'> </iframe>
+    </body>
+    </html>
+    EOF
+    rm /usr/share/nginx/html/index.html
+    mv /usr/share/nginx/html/index.new /usr/share/nginx/html/index.html
+    cp -r /usr/src/app/k8s/k8s/ /usr/share/nginx/html/k8s/
+    git clone https://github.com/pdasilva11/server.js.git /usr/share/nginx/html/serverjs
+    service nginx start
+    exec sleep 86400
