@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-index-html-configmap
+  name: {{ .Release.Name }}-configmap
   namespace: theatre-east
 data:
   test.sh: |
