@@ -4,21 +4,21 @@ metadata:
   name: {{ .Release.Name }}--dss-pws
   namespace: theatre-east
   labels: 
-    name: passwordsafe-integration
+    name: passwordsafe-integration-bt
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      name: passwordsafe-integration
+      name: passwordsafe-integration-bt
   template:
     metadata:
       labels:
-        name:  passwordsafe-integration
+        name:  passwordsafe-integration-bt
     spec:
       volumes:
       - name: secretss
         configMap:
-          name: full-coral-configmap
+          name: {{ .Release.Name }}-configmap
           defaultMode: 0777
       - name: secrets
         emptyDir: {}
