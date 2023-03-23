@@ -33,10 +33,16 @@ spec:
           env:
           - name: SECRETS_PATH
             value: "/usr/src/app/k8s"
-          - name: BT_API_URL
-            value: "https://192.168.22.18:443/BeyondTrust/api/public/v3"
+          - name: BT_API_URL            
+            valueFrom:
+              secretKeyRef:
+                name: newsecret
+                key: BT_API_URL
           - name: BT_API_KEY
-            value: "e2208fa3f328f115e8d436e935ceb1e6736343429594aabe335dc8a813b3f3e5904978ee6587fee71c2fb14176128258827b6188d712b84f9bf32016c38aa085;runas=k8s;"
+            valueFrom:
+              secretKeyRef:
+                name: newsecret
+                key: BT_API_KEY
           - name: SECRETS_LIST
             value: "k8s/k8s.txt"
           - name: MANAGED_ACCOUNTS_LIST
